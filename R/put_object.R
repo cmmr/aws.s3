@@ -284,5 +284,5 @@ calculate_data_size <- function(data) {
         post_size <- length((data))
     }
 
-    return(as.integer(post_size))
+    return(post_size)
 }
