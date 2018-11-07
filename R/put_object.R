@@ -93,7 +93,7 @@ function(
     }
     if (isTRUE(multipart)) {
         size <- calculate_data_size(file)
-        partsize <- 1e7 # 10 MB
+        partsize <- 1e8 # 100 MB
         nparts <- ceiling(size/partsize)
         
         # if file is small, there is no need for multipart upload
