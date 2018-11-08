@@ -150,17 +150,22 @@ function(
 
             data <- readBin(file, raw(), n=partsize)
 
-            r <- s3HTTP(verb = "PUT", 
-                        bucket = bucket,
-                        path = paste0('/', object),
-                        headers = list(`Content-Length` = length(data)),
-                        query = list(partNumber = i, uploadId = id),
-                        request_body = data,
-                        verbose = verbose,
-                        show_progress = show_progress,
-                        ...)
+            for (attempt in 1:3) {
+              r <- try(
+                     silent = TRUE,
+                     s3HTTP(verb = "PUT", 
+                          bucket = bucket,
+                          path = paste0('/', object),
+                          headers = list(`Content-Length` = length(data)),
+                          query = list(partNumber = i, uploadId = id),
+                          request_body = data,
+                          verbose = verbose,
+                          show_progress = show_progress,
+                          ...))
+              if (!inherits(r, 'try-error')) break
+            }
             if (inherits(r, "try-error")) {
-                stop("Multi-part upload failed")
+                stop(paste("Multi-part upload failed:", as.character(r)))
             } else {
                 # record upload details
                 partlist[[i]] <- list(Part = list(PartNumber = list(i), ETag = list(attributes(r)[["etag"]])))
