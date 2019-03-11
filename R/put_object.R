@@ -186,9 +186,9 @@ function(
                          `Content-Length` = calculate_data_size(file)
                          ))
         }
-        if (headers[["Content-Length"]] > 1e7) {
-            message(sprintf("File size is %d. Consider setting 'multipart = TRUE'.", headers[["Content-Length"]]))
-        }
+        # if (headers[["Content-Length"]] > 1e7) {
+        #     message(sprintf("File size is %d. Consider setting 'multipart = TRUE'.", headers[["Content-Length"]]))
+        # }
         r <- s3HTTP(verb = "PUT", 
                     bucket = bucket,
                     path = paste0('/', object),
